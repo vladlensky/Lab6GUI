@@ -5,7 +5,7 @@ package classes;
  */
 
 abstract public class Human {
-    protected Boolean troublesWithTheLaw;
+    protected Boolean troublesWithTheLaw=false;
     protected String name;
     public String getName(){
         return this.name;

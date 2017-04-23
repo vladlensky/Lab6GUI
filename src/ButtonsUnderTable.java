@@ -1,6 +1,7 @@
 import classes.*;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.*;
 
 /**
@@ -17,19 +18,42 @@ public class ButtonsUnderTable {
     }
     public void delete(){
         if(collections.getSelectedRow()!=-1){
-        collt.removeData(collections.getSelectedRow());
-        coll.remove(collections.getSelectedRow());
-        CollectTable collt1=new CollectTable();
-        for(int i=0;i<coll.size();i++){
-            String[] obj = {coll.get(i).getName(),coll.get(i).getAge().toString(), coll.get(i).getTroublesWithTheLaw().toString()};
-            collt1.addData(obj);
-        }
-        collections.setModel(collt1);
-        }
+            coll.remove(collections.getSelectedRow());}
+            collt.removeData(collections.getSelectedRow());
     }
     public void edit(){
+        if(collections.getSelectedRow()!=-1)
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new EditWindow(coll.get(collections.getSelectedRow()), collt, collections.getSelectedRow());
+            }
+        });
     }
     public void showThoughts(){
-
+        if(collections.getSelectedRow()!=-1){
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                JFrame jf= new JFrame("Thoughts Frame");
+                jf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                jf.setResizable(false);
+                jf.setSize(new Dimension(200,100));
+                jf.setLocationRelativeTo(null);
+                DefaultListModel<String> dlm= new DefaultListModel<>();
+                for(int i=0;i<coll.get(collections.getSelectedRow()).getThoughtsCount();i++){
+                    dlm.addElement(coll.get(collections.getSelectedRow()).getThoughts(i));
+                }
+                JList<String> list = new JList<>(dlm);
+                list.setLayoutOrientation(JList.VERTICAL);
+                list.setVisibleRowCount(3);
+                list.setFont(new Font("Verdana", Font.PLAIN, 12));
+                JScrollPane scroll = new JScrollPane(list);
+                scroll.setSize(150,75);
+                scroll.setLocation(30,100);
+                jf.add(scroll);
+                jf.setVisible(true);
+            }
+        });}
     }
 }

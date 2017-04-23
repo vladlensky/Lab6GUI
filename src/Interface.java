@@ -9,17 +9,25 @@ import java.util.*;
 import java.io.*;
 import java.util.List;
 import classes.*;
-import com.sun.webkit.ColorChooser;
 import org.json.simple.*;
 
-public class Interface extends JFrame {
+public class Interface{
     private static JPanel panelu = new JPanel();
     private static JPanel paneld= new JPanel();
     private static JPanel panelc= new JPanel();
+    private static JButton showThoughtsButton = new JButton("Show thoughts");
+    private static JButton editButton = new JButton("Edit");
+    private static JButton deleteButton = new JButton("Delete");
     private static String myVar = null;
     private static String file="";
+    private static Color color=null;
+    private static JButton colorChooserButton = new JButton("Choose background color!");;
     private static LinkedList<NormalHuman> coll = new LinkedList<NormalHuman>();
-    public static String getFile(){return file;}
+    private static ButtonsWithCommands bwc;
+    private static JList<String> listCommands;
+    private static JTable collections;
+    public static JButton doButton;
+    public synchronized static String getFile(){return file;}
     private static void colorChooser(){
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -39,9 +47,14 @@ public class Interface extends JFrame {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         colorFrame.dispose();
-                        panelu.setBackground(cc.getColor());
-                        panelc.setBackground(cc.getColor());
-                        paneld.setBackground(cc.getColor());
+                        color=cc.getColor();
+                        showThoughtsButton.setBackground(color);
+                        editButton.setBackground(color);
+                        deleteButton.setBackground(color);
+                        colorChooserButton.setBackground(color);
+                        listCommands.setForeground(color);
+                        doButton.setBackground(color);
+                        collections.setForeground(color);
                     }
                 });
                 colorFrame.add(cb, new GridBagConstraints(
@@ -52,6 +65,9 @@ public class Interface extends JFrame {
         });
     }
     Interface(){
+        showThoughtsButton.setFont(new Font("Verdana", Font.BOLD,13));
+        editButton.setFont(new Font("Verdana", Font.BOLD,13));
+        deleteButton.setFont(new Font("Verdana", Font.BOLD,13));
         JFrame jf = new JFrame();
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jf.setResizable(false);
@@ -59,25 +75,33 @@ public class Interface extends JFrame {
         jf.setTitle("Малыш и Карлсон");
         jf.setLocationRelativeTo(null);
         jf.setLayout(new GridLayout(3,1));
-
+        panelu.setBackground(Color.white);
+        panelc.setBackground(Color.white);
+        paneld.setBackground(Color.white);
         CollectTable collt = new CollectTable();
-        JTable collections = new JTable(collt);
-        JScrollPane scroll = new JScrollPane(collections);
-
-        scroll.setPreferredSize(new Dimension(300,500));
-        panelu.add(scroll,new GridBagConstraints(0,0,1,1,1,1,
-                GridBagConstraints.CENTER, GridBagConstraints.BOTH,new Insets(1,1,1,1)
-                ,0,0));
-        panelu.setVisible(true);
         for(int i=0;i<coll.size();i++){
             String[] obj = {coll.get(i).getName(),coll.get(i).getAge().toString(), coll.get(i).getTroublesWithTheLaw().toString()};
             collt.addData(obj);
         }
+        collections = new JTable(collt);
+        collections.setForeground(Color.BLACK);
+        collections.getColumnModel().getColumn(0).setMinWidth(250);
+        collections.getColumnModel().getColumn(1).setMinWidth(100);
+        collections.getColumnModel().getColumn(2).setMinWidth(100);
+        collections.getColumnModel().getColumn(2).setResizable(false);
+        collections.getColumnModel().getColumn(1).setResizable(false);
+        collections.getColumnModel().getColumn(0).setResizable(false);
+        collections.getTableHeader().setReorderingAllowed(false);
+        collections.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JScrollPane scroll = new JScrollPane(collections);
+        scroll.setPreferredSize(new Dimension(300,500));
+        panelu.setLayout(new GridBagLayout());
+        panelu.add(scroll,new GridBagConstraints(0,0,1,1,1,1,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,new Insets(1,1,1,1)
+                ,0,0));
+        panelu.setVisible(true);
         jf.add(panelu);
 
-        JButton showThoughtsButton = new JButton("Show thoughts");
-        JButton editButton = new JButton("Edit");
-        JButton deleteButton = new JButton("Delete");
         ButtonsUnderTable but= new ButtonsUnderTable(collections, collt, coll);
 
         deleteButton.addActionListener(new ActionListener() {
@@ -86,17 +110,34 @@ public class Interface extends JFrame {
                 but.delete();
             }
         });
+        showThoughtsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                but.showThoughts();
+            }
+        });
+        editButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                but.edit();
+            }
+        });
 
-        JButton doButton = new JButton("Do");
+        doButton = new JButton("Do");
+        doButton.setFont(new Font("Verdana", Font.BOLD, 14));
         DefaultListModel<String> dlm= new DefaultListModel<>();
         dlm.addElement("Remove");
         dlm.addElement("Save");
         dlm.addElement("Add person");
         dlm.addElement("Add in json");
         dlm.addElement("Hust");
-        JList<String> listCommands = new JList<>(dlm);
+        listCommands = new JList<>(dlm);
+        listCommands.setFont(new Font("Verdana", Font.PLAIN, 12));
+        listCommands.setForeground(Color.BLUE);
+        listCommands.setBackground(Color.white);
+        listCommands.setBackground(Color.LIGHT_GRAY.brighter());
         listCommands.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        ButtonsWithCommands bwc= new ButtonsWithCommands(listCommands, coll, collt, collections);
+        bwc= new ButtonsWithCommands(listCommands, coll, collt, collections);
 
         doButton.addActionListener(new ActionListener() {
             @Override
@@ -120,8 +161,7 @@ public class Interface extends JFrame {
 
         jf.add(panelc);
         jf.setVisible(true);
-
-        JButton colorChooserButton = new JButton("Choose background color!");
+        colorChooserButton.setFont(new Font("Verdana", Font.BOLD,13));
         colorChooserButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

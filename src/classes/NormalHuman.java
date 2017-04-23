@@ -7,7 +7,7 @@ package classes;
 import java.util.ArrayList;
 
 public class NormalHuman extends Human implements Comparable<NormalHuman>{
-    protected Long age;
+    protected Long age=1l;
     protected ArrayList<Thinkable> thoughts;
     public NormalHuman(String name) throws KarlsonNameException{
         super(name);
@@ -45,11 +45,15 @@ public class NormalHuman extends Human implements Comparable<NormalHuman>{
         if(i<=thoughts.size() && i>=0){return thoughts.get(i).toString();}
         else throw new ThoughtIndexException();
     }
+    public void forgetThought(int i){thoughts.remove(i);}
     public Long getAge(){
         return age;
     }
     public void setAge(long age){
         this.age=age;
+    }
+    public int getThoughtsCount(){
+        return thoughts.size();
     }
     public void thinkAbout(String th){
         Thoughts thought = new Thoughts();

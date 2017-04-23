@@ -1,3 +1,5 @@
+import classes.NormalHuman;
+
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 
@@ -36,12 +38,32 @@ public class CollectTable extends AbstractTableModel{
     }
     public void removeData(int i){
         data.remove(i);
+        fireTableDataChanged();
     }
     public void addData(String []row){
         data.add(row);
+        fireTableDataChanged();
+    }
+    public  void addData(NormalHuman nh){
+        String[] str= new String[3];
+        str[0]=nh.getName();
+        str[1]=nh.getAge().toString();
+        str[2]=nh.getTroublesWithTheLaw().toString();
+        data.add(str);
+        fireTableDataChanged();
     }
     public void editData(String []row, int numberRow ){
         removeData(numberRow-1);
         data.add(numberRow-1,row);
+        fireTableDataChanged();
+    }
+    public void editData(NormalHuman nh,int numberRow){
+        String[] str= new String[3];
+        str[0]=nh.getName();
+        str[1]=nh.getAge().toString();
+        str[2]=nh.getTroublesWithTheLaw().toString();
+        removeData(numberRow);
+        data.add(numberRow,str);
+        fireTableDataChanged();
     }
 }
