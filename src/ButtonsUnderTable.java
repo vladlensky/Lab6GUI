@@ -8,9 +8,13 @@ import java.util.*;
  * Created by Mugenor on 13.04.2017.
  */
 public class ButtonsUnderTable {
+    private static Color c = null;
     CollectTable collt;
     JTable collections;
     LinkedList<NormalHuman> coll;
+    public static void setColor(Color col){
+        c = col;
+    }
     ButtonsUnderTable(JTable table, CollectTable ct, LinkedList<NormalHuman> coll){
         collt=ct;
         collections=table;
@@ -18,8 +22,8 @@ public class ButtonsUnderTable {
     }
     public void delete(){
         if(collections.getSelectedRow()!=-1){
-            coll.remove(collections.getSelectedRow());}
-            collt.removeData(collections.getSelectedRow());
+            coll.remove(collections.getSelectedRow());
+            collt.removeData(collections.getSelectedRow());}
     }
     public void edit(){
         if(collections.getSelectedRow()!=-1)
@@ -38,16 +42,19 @@ public class ButtonsUnderTable {
                 JFrame jf= new JFrame("Thoughts Frame");
                 jf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 jf.setResizable(false);
-                jf.setSize(new Dimension(200,100));
+                jf.setSize(new Dimension(400,200));
                 jf.setLocationRelativeTo(null);
                 DefaultListModel<String> dlm= new DefaultListModel<>();
                 for(int i=0;i<coll.get(collections.getSelectedRow()).getThoughtsCount();i++){
                     dlm.addElement(coll.get(collections.getSelectedRow()).getThoughts(i));
                 }
                 JList<String> list = new JList<>(dlm);
+                if(c!=null){
+                    list.setForeground(c);
+                }
+                list.setFont(new Font("Verdana", Font.PLAIN, 13));
                 list.setLayoutOrientation(JList.VERTICAL);
                 list.setVisibleRowCount(3);
-                list.setFont(new Font("Verdana", Font.PLAIN, 12));
                 JScrollPane scroll = new JScrollPane(list);
                 scroll.setSize(150,75);
                 scroll.setLocation(30,100);

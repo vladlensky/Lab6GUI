@@ -56,6 +56,7 @@ public class Interface{
                         doButton.setBackground(color);
                         collections.setForeground(color);
                         EditWindow.setColor(color);
+                        ButtonsUnderTable.setColor(color);
                     }
                 });
                 colorFrame.add(cb, new GridBagConstraints(

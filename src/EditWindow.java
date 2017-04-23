@@ -64,7 +64,7 @@ public class EditWindow extends JFrame {
             panel.setFocusable(true);
             setFocusable(true);
             add(panel);
-            field.setSelectionColor(Color.green);
+            field.setSelectionColor(c);
             field.setSize(240,20);
             field.setLocation(27,30);
             field.setText(nh.getName());
