@@ -13,7 +13,7 @@ import org.json.simple.*;
 
 public class Interface{
     private static JPanel panelu = new JPanel();
-    private static JPanel paneld= new JPanel();
+    private static JPanel paneld= new JPanel(null);
     private static JPanel panelc= new JPanel();
     private static JButton showThoughtsButton = new JButton("Show thoughts");
     private static JButton editButton = new JButton("Edit");
@@ -21,7 +21,7 @@ public class Interface{
     private static String myVar = null;
     private static String file="";
     private static Color color=null;
-    private static JButton colorChooserButton = new JButton("Choose background color!");;
+    private static JButton colorChooserButton = new JButton("Choose color!");;
     private static LinkedList<NormalHuman> coll = new LinkedList<NormalHuman>();
     private static ButtonsWithCommands bwc;
     private static JList<String> listCommands;
@@ -55,6 +55,7 @@ public class Interface{
                         listCommands.setForeground(color);
                         doButton.setBackground(color);
                         collections.setForeground(color);
+                        EditWindow.setColor(color);
                     }
                 });
                 colorFrame.add(cb, new GridBagConstraints(
@@ -161,13 +162,15 @@ public class Interface{
 
         jf.add(panelc);
         jf.setVisible(true);
-        colorChooserButton.setFont(new Font("Verdana", Font.BOLD,13));
+        colorChooserButton.setFont(new Font("Verdana", Font.BOLD,15));
         colorChooserButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 colorChooser();
             }
         });
+        colorChooserButton.setSize(250,40);
+        colorChooserButton.setLocation(170,50);
         paneld.add(colorChooserButton);
         jf.add(paneld);
     }

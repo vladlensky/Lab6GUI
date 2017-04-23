@@ -18,6 +18,7 @@ import java.awt.event.KeyEvent;
 import java.util.LinkedList;
 
 public class EditWindow extends JFrame {
+        private static Color c = new Color(12,255,12);
         int numberRow=-1;
         CollectTable collections;
         LinkedList<NormalHuman> linkedList;
@@ -81,7 +82,7 @@ public class EditWindow extends JFrame {
             spin.setSize(60,20);
             tf.setText(nh.getAge().toString());
             tf.setEditable(true);
-            tf.setForeground(Color.green);
+            tf.setForeground(c);
             tf.setBackground(Color.WHITE);
             spin.setLocation(70,55);
             spin.setValue(nh.getAge());
@@ -114,8 +115,8 @@ public class EditWindow extends JFrame {
             False.setForeground(Color.BLACK);
             False.setBackground(Color.WHITE);
             //
-            canc.setBackground(Color.green);
-            ok.setBackground(Color.green);
+            canc.setBackground(c);
+            ok.setBackground(c);
             canc.setSize(80,30);
             canc.setLocation(40,285);
             ok.setSize(80,30);
@@ -130,8 +131,8 @@ public class EditWindow extends JFrame {
             scroll.setLocation(30,100);
             //
 
-            Add.setBackground(Color.green);
-            Del.setBackground(Color.green);
+            Add.setBackground(c);
+            Del.setBackground(c);
             Add.setSize(80,30);
             Add.setLocation(200,100);
             Del.setSize(80,30);
@@ -152,6 +153,9 @@ public class EditWindow extends JFrame {
             panel.add(thoughtsField);
             addListeners();
             setVisible(true);
+        }
+        public static void setColor(Color colo){
+            c = colo;
         }
         private void addThought(){
             if(!thoughtsField.getText().equals("")){
