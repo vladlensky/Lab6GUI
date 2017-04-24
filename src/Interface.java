@@ -109,6 +109,7 @@ public class Interface{
         collections.getTableHeader().setReorderingAllowed(false);
         collections.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane scroll = new JScrollPane(collections);
+        collections.setAutoCreateRowSorter(true);
         scroll.setPreferredSize(new Dimension(300,500));
         panelu.setLayout(new GridBagLayout());
         panelu.add(scroll,new GridBagConstraints(0,0,1,1,1,1,
