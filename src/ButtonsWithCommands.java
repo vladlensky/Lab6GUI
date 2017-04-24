@@ -69,14 +69,13 @@ public class ButtonsWithCommands {
         });
     }
     public void save() {
-        Thread t = new Thread(new Runnable() {
+        Thread t= new Thread(new Runnable() {
             @Override
             public void run() {
-                if (Interface.getFile().equals("")) throw new NullPointerException();
                 File f = new File(Interface.getFile());
-                FileOutputStream FOS = null;
-                PrintWriter pw = null;
-                try {
+                FileOutputStream FOS=null;
+                PrintWriter pw=null;
+                try{
                     FOS = new FileOutputStream(f);
                     pw = new PrintWriter(FOS, true);
                     for (int i = 0; i < coll.size(); i++) {
@@ -87,24 +86,26 @@ public class ButtonsWithCommands {
                             ar.add(itemOfCollectionThoughts);
                         }
                         JSONObject obj = new JSONObject();
+                        obj.put("age", coll.get(i).getAge());
                         obj.put("name", coll.get(i).getName());
                         obj.put("troublesWithTheLaw", coll.get(i).getTroublesWithTheLaw());
                         obj.put("thoughts", ar);
-                        obj.put("age", coll.get(i).getAge());
                         pw.println(obj.toString());
+
                     }
                 } catch (FileNotFoundException e) {
-
-                } catch (NullPointerException e) {
-
-                } finally {
-                    try {
-                        FOS.close();
-                    } catch (IOException e) {
-                    } catch (NullPointerException e) {
+                    System.out.println("File not found");
+                } catch (NullPointerException e){
+                    System.out.println("Null point");
+                }
+                finally{
+                    try{FOS.close();
+                        pw.close();
+                        System.out.println("Collection saved!");}
+                    catch(IOException | NullPointerException e)
+                    {
+                        System.out.println("Can't save collection into " + f);
                     }
-                    pw.close();
-                    System.out.println("Collection saved!");
                 }
             }
         });

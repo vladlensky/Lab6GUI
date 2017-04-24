@@ -27,40 +27,40 @@ public class ButtonsUnderTable {
     }
     public void edit(){
         if(collections.getSelectedRow()!=-1)
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new EditWindow(coll.get(collections.getSelectedRow()), collt, collections.getSelectedRow());
-            }
-        });
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    new EditWindow(coll.get(collections.getSelectedRow()), collt, collections.getSelectedRow());
+                }
+            });
     }
     public void showThoughts(){
         if(collections.getSelectedRow()!=-1){
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                JFrame jf= new JFrame("Thoughts Frame");
-                jf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                jf.setResizable(false);
-                jf.setSize(new Dimension(400,200));
-                jf.setLocationRelativeTo(null);
-                DefaultListModel<String> dlm= new DefaultListModel<>();
-                for(int i=0;i<coll.get(collections.getSelectedRow()).getThoughtsCount();i++){
-                    dlm.addElement(coll.get(collections.getSelectedRow()).getThoughts(i));
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    JFrame jf= new JFrame("Thoughts Frame");
+                    jf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                    jf.setResizable(false);
+                    jf.setSize(new Dimension(400,200));
+                    jf.setLocationRelativeTo(null);
+                    DefaultListModel<String> dlm= new DefaultListModel<>();
+                    for(int i=0;i<coll.get(collections.getSelectedRow()).getThoughtsCount();i++){
+                        dlm.addElement(coll.get(collections.getSelectedRow()).getThoughts(i));
+                    }
+                    JList<String> list = new JList<>(dlm);
+                    if(c!=null){
+                        list.setForeground(c);
+                    }
+                    list.setFont(new Font("Verdana", Font.PLAIN, 13));
+                    list.setLayoutOrientation(JList.VERTICAL);
+                    list.setVisibleRowCount(3);
+                    JScrollPane scroll = new JScrollPane(list);
+                    scroll.setSize(150,75);
+                    scroll.setLocation(30,100);
+                    jf.add(scroll);
+                    jf.setVisible(true);
                 }
-                JList<String> list = new JList<>(dlm);
-                if(c!=null){
-                    list.setForeground(c);
-                }
-                list.setFont(new Font("Verdana", Font.PLAIN, 13));
-                list.setLayoutOrientation(JList.VERTICAL);
-                list.setVisibleRowCount(3);
-                JScrollPane scroll = new JScrollPane(list);
-                scroll.setSize(150,75);
-                scroll.setLocation(30,100);
-                jf.add(scroll);
-                jf.setVisible(true);
-            }
-        });}
+            });}
     }
 }

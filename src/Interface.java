@@ -3,8 +3,7 @@
         */
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.util.*;
 import java.io.*;
 import java.util.List;
@@ -57,6 +56,7 @@ public class Interface{
                         collections.setForeground(color);
                         EditWindow.setColor(color);
                         ButtonsUnderTable.setColor(color);
+                        CloseFrame.setColor(color);
                     }
                 });
                 colorFrame.add(cb, new GridBagConstraints(
@@ -71,12 +71,25 @@ public class Interface{
         editButton.setFont(new Font("Verdana", Font.BOLD,13));
         deleteButton.setFont(new Font("Verdana", Font.BOLD,13));
         JFrame jf = new JFrame();
-        jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jf.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         jf.setResizable(false);
         jf.setSize(new Dimension(600,400));
         jf.setTitle("Малыш и Карлсон");
         jf.setLocationRelativeTo(null);
         jf.setLayout(new GridLayout(3,1));
+        jf.addWindowListener(new WindowAdapter() {
+        });
+        jf.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        new CloseFrame(bwc);
+                    }
+                });
+            }
+        });
         panelu.setBackground(Color.white);
         panelc.setBackground(Color.white);
         paneld.setBackground(Color.white);
@@ -125,6 +138,15 @@ public class Interface{
             }
         });
 
+        collections.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                super.keyReleased(e);
+                if(e.getExtendedKeyCode()==KeyEvent.VK_DELETE)
+                    but.delete();
+            }
+        });
+
         doButton = new JButton("Do");
         doButton.setFont(new Font("Verdana", Font.BOLD, 14));
         DefaultListModel<String> dlm= new DefaultListModel<>();
@@ -157,12 +179,11 @@ public class Interface{
         panelc.add(editButton,new GridBagConstraints(1, 0, 1, 1, 1, 1,
                 GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, new Insets(0,0,0,0), 0,0));
         panelc.add(doButton, new GridBagConstraints(0,1,1,2,1,1, GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL
-                                ,new Insets(0,200,0,0), 0,0));
+                ,new Insets(0,200,0,0), 0,0));
         panelc.add(listCommands, new GridBagConstraints(1,1,2,2,1,1, GridBagConstraints.CENTER,
-                                GridBagConstraints.VERTICAL, new Insets(0,0,0,200), 0, 0));
+                GridBagConstraints.VERTICAL, new Insets(0,0,0,200), 0, 0));
 
         jf.add(panelc);
-        jf.setVisible(true);
         colorChooserButton.setFont(new Font("Verdana", Font.BOLD,15));
         colorChooserButton.addActionListener(new ActionListener() {
             @Override
@@ -174,6 +195,8 @@ public class Interface{
         colorChooserButton.setLocation(170,50);
         paneld.add(colorChooserButton);
         jf.add(paneld);
+        jf.setVisible(true);
+
     }
 
     public static LinkedList<String> fromFileToString(String path) throws FileNotFoundException, SecurityException, IOException{
@@ -282,14 +305,14 @@ public class Interface{
         catch(NullPointerException e){
             er = true;
             try{
-            SwingUtilities.invokeAndWait(new Runnable() {
-                @Override
-                public void run() {
-                    ExceptionFrame.init("There is no environment variable "+var+".");
-                }
-            });
+                SwingUtilities.invokeAndWait(new Runnable() {
+                    @Override
+                    public void run() {
+                        ExceptionFrame.init("There is no environment variable "+var+".");
+                    }
+                });
             } catch(Exception exception){}}
-            catch (FileNotFoundException e){
+        catch (FileNotFoundException e){
             er = true;
             try{
                 SwingUtilities.invokeAndWait(new Runnable() {
@@ -318,6 +341,26 @@ public class Interface{
                 });} catch(Exception exception){}
         }
         file=myVar;
-        if(!er)SwingUtilities.invokeLater(()-> new Interface());
+        if(!er){
+           /**Thread thread = new Thread(){
+                @Override
+                public void run() {
+                    super.run();
+                    Thread thr = new Thread(){
+                        @Override
+                        public void run() {
+                            super.run();
+                            new CloseFrame();
+                        }
+                    };
+                    thr.start();
+                    try{thr.join();}catch (InterruptedException e){}
+                    bwc.save();
+                    System.out.println("save");
+                }
+            };
+            Runtime.getRuntime().addShutdownHook(thread);*/
+            SwingUtilities.invokeLater(()-> new Interface());
+        }
     }
 }
