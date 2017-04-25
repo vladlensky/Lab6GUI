@@ -1,9 +1,8 @@
 import javax.swing.*;
-import javax.swing.border.LineBorder;
-import javax.swing.plaf.SeparatorUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Closeable;
 
 /**
  * Created by Mugenor on 23.04.2017.

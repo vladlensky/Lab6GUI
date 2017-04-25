@@ -1,6 +1,3 @@
-/**
- * Created by bespa on 11.04.2017.
-        */
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -11,6 +8,7 @@ import classes.*;
 import org.json.simple.*;
 
 public class Interface{
+    private static boolean isChanged = false;
     private static JPanel panelu = new JPanel();
     private static JPanel paneld= new JPanel(null);
     private static JPanel panelc= new JPanel();
@@ -26,6 +24,9 @@ public class Interface{
     private static JList<String> listCommands;
     private static JTable collections;
     public static JButton doButton;
+    public static void setIsChanged(boolean changed){
+        isChanged = changed;
+    }
     public synchronized static String getFile(){return file;}
     private static void colorChooser(){
         SwingUtilities.invokeLater(new Runnable() {
@@ -57,6 +58,7 @@ public class Interface{
                         EditWindow.setColor(color);
                         ButtonsUnderTable.setColor(color);
                         CloseFrame.setColor(color);
+                        ButtonsWithCommands.setColor(color);
                     }
                 });
                 colorFrame.add(cb, new GridBagConstraints(
@@ -85,7 +87,10 @@ public class Interface{
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        new CloseFrame(bwc);
+                        if(isChanged)
+                            new CloseFrame(bwc);
+                        else
+                            System.exit(0);
                     }
                 });
             }
@@ -309,7 +314,7 @@ public class Interface{
                 SwingUtilities.invokeAndWait(new Runnable() {
                     @Override
                     public void run() {
-                        ExceptionFrame.init("There is no environment variable "+var+".");
+                        ExceptionFrame.init("There is no environment variable "+var+".", ExceptionFrame.EXIT_ON_CLOSE);
                     }
                 });
             } catch(Exception exception){}}
@@ -319,7 +324,7 @@ public class Interface{
                 SwingUtilities.invokeAndWait(new Runnable() {
                     @Override
                     public void run() {
-                        ExceptionFrame.init("Outter file is not exists. \nChange your environment variable.");
+                        ExceptionFrame.init("Outter file is not exists. \nChange your environment variable.", ExceptionFrame.EXIT_ON_CLOSE);
                     }
                 });} catch(Exception exception){}
         }catch (SecurityException e){
@@ -328,7 +333,7 @@ public class Interface{
                 SwingUtilities.invokeAndWait(new Runnable() {
                     @Override
                     public void run() {
-                        ExceptionFrame.init("You have no access for this file.\nChange your environment variable.");
+                        ExceptionFrame.init("You have no access for this file.\nChange your environment variable.", ExceptionFrame.EXIT_ON_CLOSE);
                     }
                 });} catch(Exception exception){}
         }catch(IOException e){
@@ -337,30 +342,12 @@ public class Interface{
                 SwingUtilities.invokeAndWait(new Runnable() {
                     @Override
                     public void run() {
-                        ExceptionFrame.init("There is not a file in environment variable.");
+                        ExceptionFrame.init("There is not a file in environment variable.", ExceptionFrame.EXIT_ON_CLOSE);
                     }
                 });} catch(Exception exception){}
         }
         file=myVar;
         if(!er){
-           /**Thread thread = new Thread(){
-                @Override
-                public void run() {
-                    super.run();
-                    Thread thr = new Thread(){
-                        @Override
-                        public void run() {
-                            super.run();
-                            new CloseFrame();
-                        }
-                    };
-                    thr.start();
-                    try{thr.join();}catch (InterruptedException e){}
-                    bwc.save();
-                    System.out.println("save");
-                }
-            };
-            Runtime.getRuntime().addShutdownHook(thread);*/
             SwingUtilities.invokeLater(()-> new Interface());
         }
     }

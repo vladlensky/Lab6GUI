@@ -1,6 +1,9 @@
 /**
  * Created by Mugenor on 14.04.2017.
  */
+/**
+ * Created by Mugenor on 14.04.2017.
+ */
 import classes.KarlsonNameException;
 import classes.NormalHuman;
 
@@ -222,6 +225,7 @@ public class EditWindow extends JFrame {
         ok.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Interface.setIsChanged(true);
                 exit();
             }
         });
@@ -246,5 +250,3 @@ public class EditWindow extends JFrame {
         });
     }
 }
-
-

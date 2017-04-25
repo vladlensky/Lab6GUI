@@ -23,6 +23,7 @@ public class ButtonsUnderTable {
     public void delete(){
         if(collections.getSelectedRow()!=-1){
             coll.remove(collections.getSelectedRow());
+            Interface.setIsChanged(true);
             collt.removeData(collections.getSelectedRow());}
     }
     public void edit(){
