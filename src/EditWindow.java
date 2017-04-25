@@ -21,7 +21,7 @@ import java.awt.event.KeyEvent;
 import java.util.LinkedList;
 
 public class EditWindow extends JFrame {
-    private static Color c = new Color(12,255,12);
+    private static Color c = null;
     int numberRow=-1;
     CollectTable collections;
     LinkedList<NormalHuman> linkedList;
@@ -118,8 +118,8 @@ public class EditWindow extends JFrame {
         False.setForeground(Color.BLACK);
         False.setBackground(Color.WHITE);
         //
-        canc.setBackground(c);
-        ok.setBackground(c);
+        if(c!=null)canc.setBackground(c);
+        if(c!=null)ok.setBackground(c);
         canc.setSize(80,30);
         canc.setLocation(40,285);
         ok.setSize(80,30);
@@ -134,8 +134,8 @@ public class EditWindow extends JFrame {
         scroll.setLocation(30,100);
         //
 
-        Add.setBackground(c);
-        Del.setBackground(c);
+        if(c!=null)Add.setBackground(c);
+        if(c!=null)Del.setBackground(c);
         Add.setSize(80,30);
         Add.setLocation(200,100);
         Del.setSize(80,30);
@@ -155,6 +155,7 @@ public class EditWindow extends JFrame {
         panel.add(scroll);
         panel.add(thoughtsField);
         addListeners();
+        setLocation(1000,155);
         setVisible(true);
     }
     public static void setColor(Color colo){

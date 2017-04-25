@@ -13,7 +13,7 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Interface.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Interface.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Interface.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="238">
@@ -30,7 +30,7 @@
       <file leaf-file-name="ButtonsUnderTable.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/ButtonsUnderTable.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="199">
+            <state relative-caret-position="425">
               <caret line="31" column="25" lean-forward="true" selection-start-line="31" selection-start-column="25" selection-end-line="31" selection-end-column="25" />
               <folding />
             </state>
@@ -71,16 +71,16 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ButtonsWithCommands.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ButtonsWithCommands.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/ButtonsWithCommands.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="23">
-              <caret line="202" column="42" lean-forward="true" selection-start-line="202" selection-start-column="42" selection-end-line="202" selection-end-column="42" />
+            <state relative-caret-position="193">
+              <caret line="29" column="33" lean-forward="true" selection-start-line="29" selection-start-column="33" selection-end-line="29" selection-end-column="33" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="method#doCommand#0;class#ButtonsWithCommands#0" expanded="false" />
-                <element signature="e#5192#5193#0" expanded="true" />
-                <element signature="e#5235#5236#0" expanded="true" />
+                <element signature="e#5176#5177#0" expanded="true" />
+                <element signature="e#5219#5220#0" expanded="true" />
                 <element signature="method#addInJson#0;class#ButtonsWithCommands#0" expanded="false" />
                 <element signature="method#simpleFrame#0;class#ButtonsWithCommands#0" expanded="false" />
               </folding>
@@ -91,10 +91,10 @@
       <file leaf-file-name="EditWindow.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/EditWindow.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="227" column="45" lean-forward="false" selection-start-line="227" selection-start-column="45" selection-end-line="227" selection-end-column="45" />
+            <state relative-caret-position="136">
+              <caret line="157" column="30" lean-forward="true" selection-start-line="157" selection-start-column="30" selection-end-line="157" selection-end-column="30" />
               <folding>
-                <element signature="e#0#8329#0" expanded="true" />
+                <element signature="e#0#8388#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -161,9 +161,9 @@
         <option value="$PROJECT_DIR$/src/CloseFrame.java" />
         <option value="$PROJECT_DIR$/src/MyPlayer.java" />
         <option value="$PROJECT_DIR$/src/Interface.java" />
-        <option value="$PROJECT_DIR$/src/EditWindow.java" />
         <option value="$PROJECT_DIR$/src/ButtonsUnderTable.java" />
         <option value="$PROJECT_DIR$/src/ButtonsWithCommands.java" />
+        <option value="$PROJECT_DIR$/src/EditWindow.java" />
       </list>
     </option>
   </component>
@@ -718,12 +718,12 @@
       <workItem from="1492957920473" duration="471000" />
       <workItem from="1493006512431" duration="664000" />
       <workItem from="1493044542746" duration="10406000" />
-      <workItem from="1493107320175" duration="4686000" />
+      <workItem from="1493107320175" duration="6457000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="103766000" />
+    <option name="totallyTimeSpent" value="105537000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -1074,28 +1074,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Interface.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="174" column="18" lean-forward="false" selection-start-line="174" selection-start-column="18" selection-end-line="174" selection-end-column="18" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1085#1086#0" expanded="true" />
-            <element signature="e#1120#1121#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/EditWindow.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="227" column="45" lean-forward="false" selection-start-line="227" selection-start-column="45" selection-end-line="227" selection-end-column="45" />
-          <folding>
-            <element signature="e#0#8329#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/MyPlayer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="714">
@@ -1126,7 +1104,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/ButtonsUnderTable.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="199">
+        <state relative-caret-position="425">
           <caret line="31" column="25" lean-forward="true" selection-start-line="31" selection-start-column="25" selection-end-line="31" selection-end-column="25" />
           <folding />
         </state>
@@ -1134,15 +1112,37 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/ButtonsWithCommands.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="23">
-          <caret line="202" column="42" lean-forward="true" selection-start-line="202" selection-start-column="42" selection-end-line="202" selection-end-column="42" />
+        <state relative-caret-position="193">
+          <caret line="29" column="33" lean-forward="true" selection-start-line="29" selection-start-column="33" selection-end-line="29" selection-end-column="33" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="method#doCommand#0;class#ButtonsWithCommands#0" expanded="false" />
-            <element signature="e#5192#5193#0" expanded="true" />
-            <element signature="e#5235#5236#0" expanded="true" />
+            <element signature="e#5176#5177#0" expanded="true" />
+            <element signature="e#5219#5220#0" expanded="true" />
             <element signature="method#addInJson#0;class#ButtonsWithCommands#0" expanded="false" />
             <element signature="method#simpleFrame#0;class#ButtonsWithCommands#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/EditWindow.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="157" column="30" lean-forward="true" selection-start-line="157" selection-start-column="30" selection-end-line="157" selection-end-column="30" />
+          <folding>
+            <element signature="e#0#8388#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Interface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="174" column="18" lean-forward="false" selection-start-line="174" selection-start-column="18" selection-end-line="174" selection-end-column="18" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1085#1086#0" expanded="true" />
+            <element signature="e#1120#1121#0" expanded="true" />
           </folding>
         </state>
       </provider>

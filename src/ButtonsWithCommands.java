@@ -22,7 +22,7 @@ public class ButtonsWithCommands {
     JButton stop;
     JButton pause;
     JButton play;
-    private static Color c = new Color(12,255,12);
+    private static Color c = null;
     public static void setColor(Color colo){
         c = colo;
     }
