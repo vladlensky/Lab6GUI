@@ -18,12 +18,16 @@ public class Interface{
     private static String myVar = null;
     private static String file="";
     private static Color color=null;
-    private static JButton colorChooserButton = new JButton("Choose color!");;
+    private static JButton colorChooserButton = new JButton("Choose color!");
     private static LinkedList<NormalHuman> coll = new LinkedList<NormalHuman>();
-    private static ButtonsWithCommands bwc;
-    private static JList<String> listCommands;
-    private static JTable collections;
-    public static JButton doButton;
+    private static DefaultListModel<String> dlm= new DefaultListModel<>();
+    private static JList<String> listCommands = new JList<>(dlm);
+    private static JButton doButton;
+    private static CollectTable collt = new CollectTable();
+    private static JTable collections = new JTable(collt);;
+    private static ButtonsUnderTable but= new ButtonsUnderTable(collections, collt, coll);
+    private static ButtonsWithCommands bwc= new ButtonsWithCommands(listCommands, coll, collt, collections);
+    private static CloseFrame cf = new CloseFrame(bwc);
     public static void setIsChanged(boolean changed){
         isChanged = changed;
     }
@@ -55,10 +59,9 @@ public class Interface{
                         listCommands.setForeground(color);
                         doButton.setBackground(color);
                         collections.setForeground(color);
-                        EditWindow.setColor(color);
-                        ButtonsUnderTable.setColor(color);
-                        CloseFrame.setColor(color);
-                        ButtonsWithCommands.setColor(color);
+                        but.setColor(color);
+                        bwc.setColor(color);
+                        cf.setColor(color);
                     }
                 });
                 colorFrame.add(cb, new GridBagConstraints(
@@ -88,9 +91,8 @@ public class Interface{
                     @Override
                     public void run() {
                         if(isChanged)
-                            new CloseFrame(bwc);
-                        else
-                            System.exit(0);
+                            cf.init();
+                        else System.exit(0);
                     }
                 });
             }
@@ -98,12 +100,10 @@ public class Interface{
         panelu.setBackground(Color.white);
         panelc.setBackground(Color.white);
         paneld.setBackground(Color.white);
-        CollectTable collt = new CollectTable();
         for(int i=0;i<coll.size();i++){
             String[] obj = {coll.get(i).getName(),coll.get(i).getAge().toString(), coll.get(i).getTroublesWithTheLaw().toString()};
             collt.addData(obj);
         }
-        collections = new JTable(collt);
         collections.setForeground(Color.BLACK);
         collections.getColumnModel().getColumn(0).setMinWidth(250);
         collections.getColumnModel().getColumn(1).setMinWidth(100);
@@ -122,8 +122,6 @@ public class Interface{
                 ,0,0));
         panelu.setVisible(true);
         jf.add(panelu);
-
-        ButtonsUnderTable but= new ButtonsUnderTable(collections, collt, coll);
 
         deleteButton.addActionListener(new ActionListener() {
             @Override
@@ -155,19 +153,16 @@ public class Interface{
 
         doButton = new JButton("Do");
         doButton.setFont(new Font("Verdana", Font.BOLD, 14));
-        DefaultListModel<String> dlm= new DefaultListModel<>();
         dlm.addElement("Remove");
         dlm.addElement("Save");
         dlm.addElement("Add person");
         dlm.addElement("Add in json");
         dlm.addElement("Hust");
-        listCommands = new JList<>(dlm);
         listCommands.setFont(new Font("Verdana", Font.PLAIN, 12));
         listCommands.setForeground(Color.BLUE);
         listCommands.setBackground(Color.white);
         listCommands.setBackground(Color.LIGHT_GRAY.brighter());
         listCommands.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        bwc= new ButtonsWithCommands(listCommands, coll, collt, collections);
 
         doButton.addActionListener(new ActionListener() {
             @Override
@@ -262,35 +257,31 @@ public class Interface{
         for (int i = 0; i < jsonLines.size(); i++) {
             NormalHuman nh;
             try{nh = StringToObject(jsonLines.get(i));
-                coll.add(nh);}catch (NullPointerException e){a++;}
+                coll.add(nh);}catch (NullPointerException | KarlsonNameException e){a++;}
         }
         if(a==1)System.out.println(a + " of NormalHuaman's is not correct in the file");
         if(a>1) System.out.println(a + " of NormalHuman's are not correct in the file");
         return coll;
     }
 
-    public static NormalHuman StringToObject(String str)  {
+    public static NormalHuman StringToObject(String str) throws KarlsonNameException, NullPointerException  {
 
         NormalHuman nh = new NormalHuman();
         JSONObject obj = (JSONObject) JSONValue.parse(str);
         JSONArray ar = (JSONArray) obj.get("thoughts");
-        try{for (int j = 0; j < ar.size(); j++) {
+        for (int j = 0; j < ar.size(); j++) {
             String th = null;
             try{JSONObject object = (JSONObject) ar.get(j);
                 th = (String) object.get("thought");}catch(NullPointerException e){}
             nh.thinkAbout(th);
-        }}catch (NullPointerException e){}
+            }
         Long age=5l;
         String name = null;
         boolean troublesWithTheLaw = false;
-        try{age= (Long)obj.get("age"); }catch(NullPointerException e){}catch (ClassCastException e){age=Long.parseLong((String)obj.get("age"));}
-        try{name = (String) obj.get("name");}catch(NullPointerException e){}
-        try{troublesWithTheLaw = (Boolean) obj.get("troublesWithTheLaw");}catch(NullPointerException e){troublesWithTheLaw=Boolean.parseBoolean((String)obj.get("age"));}
-        try {
-            nh.setName(name);
-        } catch (KarlsonNameException e) {
-            System.out.println("Karlson is a bad name for NormalHuman.");
-        }
+        try{age= (Long)obj.get("age");}catch (ClassCastException e){age=Long.parseLong((String)obj.get("age"));}
+        name = (String) obj.get("name");
+        try{troublesWithTheLaw = (Boolean) obj.get("troublesWithTheLaw");}catch(ClassCastException e){troublesWithTheLaw=Boolean.parseBoolean((String)obj.get("age"));}
+        nh.setName(name);
         nh.setAge(age);
         nh.setTroublesWithTheLaw(troublesWithTheLaw);
         return nh;
@@ -300,9 +291,9 @@ public class Interface{
 
     public static void main(String[] args){
         boolean er = false;
-        final String var="myVar";
-        List<String> lines=null;
-        try{myVar= System.getenv(var);
+        final String var="Source";
+        List<String> lines;
+        try{myVar= System.getenv(var) + "\\din.json";
             if(myVar==null) throw new NullPointerException();
             File f = new File(myVar);
             lines = fromFileToString(myVar);

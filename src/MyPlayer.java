@@ -114,13 +114,11 @@ public class MyPlayer implements Closeable {
         return clip.getFrameLength();
     }
 
-    public int getFrame(){
-        return clip.getFramePosition();
-    }
-
     public void setFrame(int pos){
         if(released){
+            if(playing) clip.stop();
             clip.setFramePosition(pos);
+            clip.start();
         }
     }
 

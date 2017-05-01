@@ -1,16 +1,12 @@
+import classes.KarlsonNameException;
 import classes.NormalHuman;
 import org.json.simple.*;
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyVetoException;
-import java.beans.VetoableChangeListener;
 import java.util.LinkedList;
 import java.io.*;
 
@@ -18,20 +14,32 @@ import java.io.*;
  * Created by Mugenor on 13.04.2017.
  */
 public class ButtonsWithCommands {
-    JButton resume;
-    JButton stop;
-    JButton pause;
-    JButton play;
-    private static Color c = null;
-    public static void setColor(Color colo){
-        c = colo;
-    }
-    JList<String> listCommands;
-    LinkedList<NormalHuman> coll;
-    CollectTable collt;
-    JTable collections;
-    private static File f = new File("C:\\Users\\bespa\\Lab6GUI-master (4)\\Rammstein_-_Du_hast.wav");
+    private JButton resume=new JButton("resume");
+    private JButton stop=new JButton("stop");
+    private JButton pause=new JButton("pause");
+    private JButton play=new JButton("play");
+    private Color c = null;
+    private boolean openedRemoveWindow=false;
+    private boolean openedAddJsonWindow=false;
+    private boolean openedAddWindow=false;
+    private boolean openedHustWindow=false;
+    private JList<String> listCommands;
+    private LinkedList<NormalHuman> coll;
+    private CollectTable collt;
+    private JTable collections;
+    private static File f = new File(System.getenv("Source") + "\\Rammstein_-_Du_hast.wav");
     private static MyPlayer sound = new MyPlayer(f);
+    private EditWindow ew = new EditWindow();
+    public void setColor(Color colo){
+        c = colo;
+        if(colo!=null) {
+            play.setBackground(colo);
+            stop.setBackground(colo);
+            resume.setBackground(colo);
+            pause.setBackground(colo);
+            ew.setColor(c);
+        }
+    }
     ButtonsWithCommands(JList<String> listCommands, LinkedList<NormalHuman> coll, CollectTable collt, JTable collections){
         this.listCommands=listCommands;
         this.coll=coll;
@@ -53,36 +61,43 @@ public class ButtonsWithCommands {
         }
     }
     public void remove(){
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                JFrame jf= new JFrame("Deleting frame");
-                JLabel label= new JLabel("Put here NormalHuman in json: ");
-                JLabel alabel = new JLabel("");
-                JTextField tf = new JTextField("", 50);
-                simpleFrame(jf, label, alabel, tf);
-                tf.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        String s = tf.getText();
-                        try{NormalHuman nh=Interface.StringToObject(s);
-                            collt.removeData(coll.indexOf(nh));
-                            Interface.setIsChanged(true);
-                            coll.remove(nh);
-                            CollectTable collt1=new CollectTable();
-                            for(int i=0;i<coll.size();i++){
-                                String[] obj = {coll.get(i).getName(),coll.get(i).getAge().toString(), coll.get(i).getTroublesWithTheLaw().toString()};
-                                collt1.addData(obj);
+        if(!openedRemoveWindow)
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    openedRemoveWindow=true;
+                    JFrame jf= new JFrame("Deleting frame");
+                    JLabel label= new JLabel("Put here NormalHuman in json: ");
+                    JLabel alabel = new JLabel("");
+                    JTextField tf = new JTextField("", 50);
+                    simpleFrame(jf, label, alabel, tf);
+                    if(coll.size()!=0)
+                    tf.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            String s = tf.getText();
+                            try{NormalHuman nh=Interface.StringToObject(s);
+                                if(coll.indexOf(nh)!=-1){
+                                collt.removeData(coll.indexOf(nh));
+                                System.out.println(collt);
+                                Interface.setIsChanged(true);
+                                coll.remove(nh);
+                                System.out.println(coll);
+                                jf.dispose();
+                                openedRemoveWindow=false;} else throw new NullPointerException();}
+                            catch (NullPointerException | KarlsonNameException exc){
+                                alabel.setText("Wrong NormalHuman!");
                             }
-                            collections.setModel(collt1);
-                            jf.dispose();}
-                        catch (NullPointerException exc){
-                            alabel.setText("Wrong NormalHuman!");
                         }
-                    }
-                });
-            }
-        });
+                    }); else alabel.setText("There is nothing to remove");
+                    jf.addWindowListener(new WindowAdapter() {
+                        @Override
+                        public void windowClosing(WindowEvent e) {
+                            openedRemoveWindow=false;
+                        }
+                    });
+                }
+            });
     }
     public void save() {
         Thread t= new Thread(new Runnable() {
@@ -107,7 +122,7 @@ public class ButtonsWithCommands {
                         obj.put("troublesWithTheLaw", coll.get(i).getTroublesWithTheLaw());
                         obj.put("thoughts", ar);
                         pw.println(obj.toString());
-
+                        Interface.setIsChanged(false);
                     }
                 } catch (FileNotFoundException e) {
                     System.out.println("File not found");
@@ -129,97 +144,123 @@ public class ButtonsWithCommands {
         t.start();
     }
     public void addPerson(){
-        new EditWindow(collt, coll);
+        if(!openedAddWindow) {
+            openedAddWindow=true;
+            ew = new EditWindow("Add Person", collt, coll, new EditExit() {
+                @Override
+                public void doOnExit() {
+                    openedAddWindow = false;
+                }
+            });
+            ew.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    openedAddWindow=false;
+                }
+            });
+        }
     }
     public void addInJson(){
-        JFrame jf= new JFrame("Deleting frame");
-        JLabel label= new JLabel("Put here NormalHuman in json: ");
-        JLabel alabel = new JLabel("");
-        JTextField tf = new JTextField("", 50);
-        simpleFrame(jf, label, alabel, tf);
-        tf.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String str=tf.getText();
-                try{NormalHuman nh=Interface.StringToObject(str);
-                    String [] strArray={nh.getName(), nh.getAge().toString(),nh.getTroublesWithTheLaw().toString()};
-                    collt.addData(strArray);
-                    coll.add(nh);
-                    CollectTable collt1=new CollectTable();
-                    for(int i=0;i<coll.size();i++){
-                        String[] obj = {coll.get(i).getName(),coll.get(i).getAge().toString(), coll.get(i).getTroublesWithTheLaw().toString()};
-                        collt1.addData(obj);
+        if(!openedAddJsonWindow) {
+            openedAddJsonWindow=true;
+            JFrame jf = new JFrame("Deleting frame");
+            JLabel label = new JLabel("Put here NormalHuman in json: ");
+            JLabel alabel = new JLabel("");
+            JTextField tf = new JTextField("", 50);
+            simpleFrame(jf, label, alabel, tf);
+            tf.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String str = tf.getText();
+                    try {
+                        NormalHuman nh = Interface.StringToObject(str);
+                        String[] strArray = {nh.getName(), nh.getAge().toString(), nh.getTroublesWithTheLaw().toString()};
+                        collt.addData(strArray);
+                        coll.add(nh);
+                        CollectTable collt1 = new CollectTable();
+                        for (int i = 0; i < coll.size(); i++) {
+                            String[] obj = {coll.get(i).getName(), coll.get(i).getAge().toString(), coll.get(i).getTroublesWithTheLaw().toString()};
+                            collt1.addData(obj);
+                        }
+                        collections.setModel(collt1);
+                        Interface.setIsChanged(true);
+                        openedAddJsonWindow=false;
+                        jf.dispose();
+                    } catch (NullPointerException | KarlsonNameException exc) {
+                        alabel.setText("Wrong NormalHuman!");
                     }
-                    collections.setModel(collt1);
-                    jf.dispose();}
-                catch (NullPointerException exc){
-                    alabel.setText("Wrong NormalHuman!");
                 }
-            }
-        });
+            });
+            jf.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    openedAddJsonWindow=false;
+                }
+            });
+        }
     }
     public void hust() {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                if(!sound.isReleased()) return;
-                try{
-                    JFrame jf = new JFrame();
-                    jf.setLocation(300,30);
-                    jf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                    jf.setResizable(false);
-                    jf.setTitle("Do hust");
-                    jf.setLayout(new GridBagLayout());
-                    play = new JButton("play");
-                    play.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            sound.setVolume(1f);
-                            sound.play();
-                        }
-                    });
-                    stop = new JButton("stop");
-                    stop.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            sound.stop();
-                        }
-                    });
-                    pause = new JButton("pause");
-                    pause.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            sound.pause();
-                        }
-                    });
-                    resume = new JButton("resume");
-                    resume.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            sound.resume();
-                        }
-                    });
-                    play.setBackground(c);
-                    stop.setBackground(c);
-                    resume.setBackground(c);
-                    pause.setBackground(c);
-                    ImageIcon du_hust= new ImageIcon("C:\\Users\\bespa\\Lab6GUI-master (4)\\du_hust.jpg");
-                    JLabel du = new JLabel(du_hust);
-                    jf.add(du, new GridBagConstraints(0,0,4,1,0,
-                            0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,new Insets(10,0,0,0),0,0));
-                    jf.add(play, new GridBagConstraints(0,1,1,1,0,
-                            0,GridBagConstraints.CENTER,GridBagConstraints.HORIZONTAL,new Insets(10,200,10,10),0,0));
-                    jf.add(stop, new GridBagConstraints(1,1,1,1,0,
-                            0,GridBagConstraints.CENTER,GridBagConstraints.HORIZONTAL,new Insets(10,10,10,10),0,0));
-                    jf.add(pause, new GridBagConstraints(2,1,1,1,0,
-                            0,GridBagConstraints.CENTER,GridBagConstraints.HORIZONTAL,new Insets(10,10,10,10),0,0));
-                    jf.add(resume, new GridBagConstraints(3,1,1,1,0,
-                            0,GridBagConstraints.CENTER,GridBagConstraints.HORIZONTAL,new Insets(10,10,10,190),0,0));
-                    jf.pack();
-                    System.out.println(jf.getSize());
-                    jf.setVisible(true);}catch (Exception e){}
-            }
-        });
+        if(!openedHustWindow&&sound.isReleased()){openedHustWindow=true;
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    try{
+                        JFrame jf = new JFrame();
+                        jf.setLocation(300,30);
+                        jf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                        jf.setResizable(false);
+                        jf.setTitle("Do hust");
+                        jf.setLayout(new GridBagLayout());
+                        play.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                sound.setVolume(1f);
+                                sound.play();
+                            }
+                        });
+                        stop.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                sound.stop();
+                            }
+                        });
+                        pause.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                sound.pause();
+                            }
+                        });
+                        resume.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                sound.resume();
+                            }
+                        });
+                        ImageIcon du_hust= new ImageIcon(System.getenv("Source") + "\\du_hust.jpg");
+                        JLabel du = new JLabel(du_hust);
+                        jf.add(du, new GridBagConstraints(0,0,4,1,0,
+                                0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,new Insets(10,0,0,0),0,0));
+                        jf.add(play, new GridBagConstraints(0,1,1,1,0,
+                                0,GridBagConstraints.CENTER,GridBagConstraints.HORIZONTAL,new Insets(10,200,10,10),0,0));
+                        jf.add(stop, new GridBagConstraints(1,1,1,1,0,
+                                0,GridBagConstraints.CENTER,GridBagConstraints.HORIZONTAL,new Insets(10,10,10,10),0,0));
+                        jf.add(pause, new GridBagConstraints(2,1,1,1,0,
+                                0,GridBagConstraints.CENTER,GridBagConstraints.HORIZONTAL,new Insets(10,10,10,10),0,0));
+                        jf.add(resume, new GridBagConstraints(3,1,1,1,0,
+                                0,GridBagConstraints.CENTER,GridBagConstraints.HORIZONTAL,new Insets(10,10,10,190),0,0));
+                        jf.pack();
+                        jf.addWindowListener(new WindowAdapter() {
+                            @Override
+                            public void windowClosing(WindowEvent e) {
+                                openedHustWindow=false;
+                                sound.stop();
+                            }
+                        });
+                        System.out.println(jf.getSize());
+                        jf.setVisible(true);}catch (Exception e){}
+
+                }
+            });}
     }
     private void simpleFrame(JFrame jf, JLabel label, JLabel alabel, JTextField tf){
         jf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

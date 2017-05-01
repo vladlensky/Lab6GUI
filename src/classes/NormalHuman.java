@@ -82,7 +82,7 @@ public class NormalHuman extends Human implements Comparable<NormalHuman>{
         if (nh == null || !(nh instanceof NormalHuman)) return false;
         if(!super.equals(nh)) return false;
         NormalHuman normalHuman = (NormalHuman) nh;
-        return thoughts.equals(normalHuman.getAllThoughts());
+        return thoughts.equals(normalHuman.getAllThoughts()) && age.equals(normalHuman.getAge());
     }
     public int hashCode() {
         int r = super.hashCode();
@@ -91,7 +91,8 @@ public class NormalHuman extends Human implements Comparable<NormalHuman>{
     }
     public String toString() {
         return super.toString() +
-                "\nГоловные мысли: " + thoughts.toString();
+                "\nГоловные мысли: " + thoughts.toString() +
+                "\nВозраст: " + age;
     }
     public int countOfThoughts(){return thoughts.size();}
     public int compareTo(NormalHuman nh){

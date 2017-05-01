@@ -66,4 +66,11 @@ public class CollectTable extends AbstractTableModel{
         data.add(numberRow,str);
         fireTableDataChanged();
     }
+    public String toString(){
+        String s="";
+        for(int i =0 ;i<data.size();i++){
+            s=s+"\n" + data.get(i)[0]+ "  " + data.get(i)[1] + "  " + data.get(i)[2];
+        }
+        return s;
+    }
 }

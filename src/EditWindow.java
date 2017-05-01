@@ -14,103 +14,131 @@ import javax.swing.event.AncestorListener;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.util.LinkedList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class EditWindow extends JFrame {
     private static Color c = null;
-    int numberRow=-1;
-    CollectTable collections;
-    LinkedList<NormalHuman> linkedList;
-    JPanel panel = new JPanel();
-    NormalHuman nh= new NormalHuman();
-    JTextField field = new JTextField(20);
-    JTextField thoughtsField = new JTextField();
-    JButton Add = new JButton("Add");
-    JButton Del = new JButton("Delete");
-    JRadioButton True = new JRadioButton("true");
-    JRadioButton False = new JRadioButton("false");
-    JButton ok = new JButton("Ok");
-    JButton canc = new JButton("Cancel");
-    DefaultListModel<String> dlm = new DefaultListModel();
-    JList<String> list = new JList(dlm);
-    SpinnerNumberModel snm = new SpinnerNumberModel(1,1,100,1);
-    JSpinner spin = new JSpinner(snm);
-    JTextField tf = ((JSpinner.DefaultEditor) spin.getEditor()).getTextField();
-    public EditWindow(CollectTable collections, LinkedList<NormalHuman> linkedList){
-        this.collections=collections;
-        this.linkedList=linkedList;
-        try{
-            nh.setName("SetName");
-        }catch (KarlsonNameException e){}
-        init();
+    private boolean opened = false;
+    private boolean legalAge = true;
+    private int numberRow=-1;
+    private CollectTable collections;
+    private LinkedList<NormalHuman> linkedList;
+    private JPanel panel = new JPanel();
+    private NormalHuman nh= new NormalHuman();
+    private JTextField field = new JTextField(20);
+    private JTextField thoughtsField = new JTextField();
+    private JButton Add = new JButton("Add");
+    private JButton Del = new JButton("Delete");
+    private JRadioButton True = new JRadioButton("true");
+    private JRadioButton False = new JRadioButton("false");
+    private JButton ok = new JButton("Ok");
+    private JButton canc = new JButton("Cancel");
+    private DefaultListModel<String> dlm = new DefaultListModel();
+    private JList<String> list = new JList(dlm);
+    private SpinnerNumberModel snm = new SpinnerNumberModel(1,1,100,1);
+    private JSpinner spin = new JSpinner(snm);
+    private JTextField tf = ((JSpinner.DefaultEditor) spin.getEditor()).getTextField();
+    private JLabel excNameLabel= new JLabel();
+    private JLabel excAgeLabel = new JLabel();
+    public EditWindow(){}
+    public EditWindow(String name, CollectTable collections, LinkedList<NormalHuman> linkedList , EditExit ee){
+        setTitle(name);
+            this.collections = collections;
+            this.linkedList = linkedList;
+            try {
+                nh.setName("SetName");
+            } catch (KarlsonNameException e) {
+            }
+
+            init();
+            setExitOpereation(ee);
     }
-    public EditWindow(NormalHuman nh, CollectTable collections, int numberRow){
-        this.numberRow=numberRow;
-        this.nh=nh;
-        this.collections=collections;
-        init();
+    public EditWindow(String name, NormalHuman nh, CollectTable collections, int numberRow, EditExit ee){
+            setTitle(name);
+            this.numberRow = numberRow;
+            this.nh = nh;
+            this.collections = collections;
+            init();
+            setExitOpereation(ee);
     }
-    private void init(){
-        for(int i=0;i<nh.getThoughtsCount();i++){
+    public  void setColor(Color colo){
+        c = colo;
+        doColors();
+    }
+    public void setLocat(int a,int b){
+        setLocation(a,b);
+    }
+    public boolean isOpened(){
+        return opened;
+    }
+    private void doColors(){
+        if(c!=null)tf.setForeground(c);
+        if(c!=null)ok.setBackground(c);
+        if(c!=null)Add.setBackground(c);
+        if(c!=null)Del.setBackground(c);
+        if(c!=null)field.setSelectionColor(c);
+        if(c!=null)canc.setBackground(c);
+        if(c!=null)ok.setBackground(c);
+    }
+    private void init() {
+        for (int i = 0; i < nh.getThoughtsCount(); i++) {
             dlm.addElement(nh.getThoughts(i));
         }
         setLocationRelativeTo(null);
         setFocusable(true);
         setResizable(false);
-        setSize(300,420);
+        setSize(300, 420);
         panel.setBackground(Color.white);
         panel.setLayout(null);
         panel.setFocusable(true);
         setFocusable(true);
         add(panel);
-        field.setSelectionColor(c);
-        field.setSize(240,20);
-        field.setLocation(27,30);
+        field.setSize(240, 20);
+        field.setLocation(27, 30);
         field.setText(nh.getName());
         //
         JLabel label = new JLabel("Age:");
-        label.setLocation(28,48);
-        label.setSize(50,30);
+        label.setLocation(28, 48);
+        label.setSize(50, 30);
         label.setFont(new Font("Verdana", Font.PLAIN, 13));
         //
         JLabel name = new JLabel("Name:");
-        name.setLocation(27,0);
-        name.setSize(50,30);
+        name.setLocation(27, 0);
+        name.setSize(50, 30);
         name.setFont(new Font("Verdana", Font.PLAIN, 13));
         //
-        spin.setSize(60,20);
+        spin.setSize(60, 20);
         tf.setText(nh.getAge().toString());
         tf.setEditable(true);
-        tf.setForeground(c);
-        tf.setBackground(Color.WHITE);
-        spin.setLocation(70,55);
+
+        spin.setLocation(70, 55);
         spin.setValue(nh.getAge());
         //
         JLabel trob = new JLabel("");
-        trob.setLocation(27,70);
-        trob.setSize(80,30);
+        trob.setLocation(27, 70);
+        trob.setSize(80, 30);
         trob.setFont(new Font("Verdana", Font.BOLD, 13));
         //
-        thoughtsField.setSize(new Dimension(200,20));
-        thoughtsField.setLocation(new Point(27,180));
+        thoughtsField.setSize(new Dimension(200, 20));
+        thoughtsField.setLocation(new Point(27, 180));
         //
         JLabel trobL = new JLabel("Troubles with the law:");
-        trobL.setLocation(27,200);
-        trobL.setSize(180,30);
+        trobL.setLocation(27, 200);
+        trobL.setSize(180, 30);
         trobL.setFont(new Font("Verdana", Font.BOLD, 13));
         //
         ButtonGroup group = new ButtonGroup();
-        if(nh.getTroublesWithTheLaw()) True.setSelected(true); else False.setSelected(true);
+        if (nh.getTroublesWithTheLaw()) True.setSelected(true);
+        else False.setSelected(true);
         False.setFont(new Font("Verdana", Font.PLAIN, 12));
         True.setFont(new Font("Verdana", Font.PLAIN, 12));
-        True.setSize(80,30);
-        False.setSize(80,30);
-        True.setLocation(30,230);
-        False.setLocation(29,252);
+        True.setSize(80, 30);
+        False.setSize(80, 30);
+        True.setLocation(30, 230);
+        False.setLocation(29, 252);
         group.add(True);
         group.add(False);
         True.setForeground(Color.BLACK);
@@ -118,28 +146,35 @@ public class EditWindow extends JFrame {
         False.setForeground(Color.BLACK);
         False.setBackground(Color.WHITE);
         //
-        if(c!=null)canc.setBackground(c);
-        if(c!=null)ok.setBackground(c);
-        canc.setSize(80,30);
-        canc.setLocation(40,285);
-        ok.setSize(80,30);
-        ok.setLocation(160,285);
+        canc.setSize(80, 30);
+        canc.setLocation(40, 285);
+        ok.setSize(80, 30);
+        ok.setLocation(160, 285);
         //
 
         list.setLayoutOrientation(JList.VERTICAL);
         list.setVisibleRowCount(3);
         list.setFont(new Font("Verdana", Font.PLAIN, 12));
         JScrollPane scroll = new JScrollPane(list);
-        scroll.setSize(150,75);
-        scroll.setLocation(30,100);
+        scroll.setSize(150, 75);
+        scroll.setLocation(30, 100);
         //
 
-        if(c!=null)Add.setBackground(c);
-        if(c!=null)Del.setBackground(c);
-        Add.setSize(80,30);
-        Add.setLocation(200,100);
-        Del.setSize(80,30);
-        Del.setLocation(200,143);
+        Add.setSize(80, 30);
+        Add.setLocation(200, 100);
+        Del.setSize(80, 30);
+        Del.setLocation(200, 143);
+        doColors();
+        excAgeLabel.setForeground(Color.RED);
+        excAgeLabel.setLocation(130,45);
+        excAgeLabel.setSize(500,30);
+        excAgeLabel.setFont(new Font("Verdana", Font.BOLD, 13));
+        panel.add(excAgeLabel);
+        excNameLabel.setForeground(Color.RED);
+        excNameLabel.setLocation(70,0);
+        excNameLabel.setSize(500,30);
+        excNameLabel.setFont(new Font("Verdana", Font.BOLD, 13));
+        panel.add(excNameLabel);
         panel.add(True);
         panel.add(name);
         panel.add(False);
@@ -155,11 +190,8 @@ public class EditWindow extends JFrame {
         panel.add(scroll);
         panel.add(thoughtsField);
         addListeners();
-        setLocation(1000,155);
+        setLocat(1000,150);
         setVisible(true);
-    }
-    public static void setColor(Color colo){
-        c = colo;
     }
     private void addThought(){
         if(!thoughtsField.getText().equals("")){
@@ -168,11 +200,14 @@ public class EditWindow extends JFrame {
         }
     }
     private void deleteThought(){
+        if(list.getSelectedIndex()!=-1){
         nh.forgetThought(list.getSelectedIndex());
-        dlm.remove(list.getSelectedIndex());
+        dlm.remove(list.getSelectedIndex());}
     }
-    private void exit(){
+    private void exit(EditExit ee){
+        if(!legalAge) return;
         try{
+            if(field.getText().equals("")) throw new KarlsonNameException("empty");
             nh.setName(field.getText());
             nh.setAge(snm.getNumber().longValue());
             nh.setTroublesWithTheLaw(True.isSelected());
@@ -180,25 +215,51 @@ public class EditWindow extends JFrame {
                 linkedList.add(nh);}
             else
                 collections.editData(nh, numberRow);
+            ee.doOnExit();
             dispose();
         }catch(KarlsonNameException exc){
-            JLabel label = new JLabel("NormalHuman can't be Karlson");
-            label.setForeground(Color.RED);
-            label.setLocation(70,0);
-            label.setSize(500,30);
-            label.setFont(new Font("Verdana", Font.BOLD, 13));
-            panel.add(label);
+            if(exc.getMessage().equals("empty"))excNameLabel.setText("Write name of NormalHuman");
+                else excNameLabel.setText("NormalHuman can't be Karlson");
             panel.updateUI();
         }
     }
-    private void addListeners(){
+    public void setExitOpereation(EditExit ee){
         EditWindow ew = this;
+
         field.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                exit();
+                exit(ee);
             }
         });
+
+        ok.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                exit(ee);
+                Interface.setIsChanged(true);
+            }
+        });
+
+        this.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                super.keyPressed(e);
+                if(e.getExtendedKeyCode()==KeyEvent.VK_ENTER){
+                    exit(ee);
+                }
+            }
+        });
+
+        canc.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ew.dispose();
+                ee.doOnExit();
+            }
+        });
+    }
+    private void addListeners(){
         thoughtsField.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -211,32 +272,10 @@ public class EditWindow extends JFrame {
                 deleteThought();
             }
         });
-        canc.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                ew.dispose();
-            }
-        });
         Add.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 addThought();
-            }
-        });
-        ok.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Interface.setIsChanged(true);
-                exit();
-            }
-        });
-        this.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent e) {
-                super.keyPressed(e);
-                if(e.getExtendedKeyCode()==KeyEvent.VK_ENTER){
-                    exit();
-                }
             }
         });
         list.addKeyListener(new KeyAdapter() {
@@ -247,6 +286,20 @@ public class EditWindow extends JFrame {
                     if(list.getSelectedIndex()!=-1)
                         deleteThought();
                 }
+            }
+        });
+        Pattern pat = Pattern.compile("-?0*[0-9]?[0-9]?");
+        tf.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                Matcher mat=pat.matcher(tf.getText());
+                if(!mat.matches()){
+                    legalAge=false;
+                    excAgeLabel.setText("Illegal age");
+                    panel.updateUI();
+                } else {legalAge=true;
+                        excAgeLabel.setText("");
+                        panel.updateUI();}
             }
         });
     }
